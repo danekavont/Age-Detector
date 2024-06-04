@@ -26,8 +26,7 @@ Setup
      - Available in the OpenCV data directory (e.g., `opencv/data/haarcascades/`)
      - Or download from: [https://github.com/opencv/opencv/tree/master/data/haarcascades](https://github.com/opencv/opencv/tree/master/data/haarcascades)
    - `age_deploy.prototxt` and `age_net.caffemodel` (for age prediction): 
-     - Download from: [invalid URL removed]
-3. Place models: Put the downloaded models in a folder named `models` within your project directory.
+3. or Download models from models folder   
 
 
 Running the Application
