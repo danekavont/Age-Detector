@@ -17,13 +17,13 @@ class AgeDetector(QMainWindow):
         # Load models for face detection and age prediction
         self.face_cascade = cv2.CascadeClassifier('models/haarcascade_frontalface_default.xml')
         self.age_net = cv2.dnn.readNetFromCaffe('models/age_deploy.prototxt', 'models/age_net.caffemodel')
-        self.MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)  # Mean values for the age model
+        self.MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)  # Mean values for the age model which is already specifically set from the pre-trained model
         self.age_list = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(21-24)', '(25-32)', '(33-36)', '(38-43)', '(48-53)', '(60-100)']
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")  # Set object name for the window
         MainWindow.resize(870, 600)  # Set window size
-        MainWindow.setStyleSheet("background-color: grey;")  # Set background color
+        MainWindow.setStyleSheet("background-color: pink;")  # Set background color
 
         # Create and configure a central widget to hold UI elements
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -69,11 +69,12 @@ class AgeDetector(QMainWindow):
         self.retranslateUi(MainWindow)  # Translate UI elements if needed
         QtCore.QMetaObject.connectSlotsByName(MainWindow)  # Connect signals and slots automatically
 
+    #to set text content for various GUI elements
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Age Detector"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Age Range Detector"))
         self.camera_label.setText(_translate("MainWindow", ""))
-        self.title.setText(_translate("MainWindow", "AGE DETECTOR"))
+        self.title.setText(_translate("MainWindow", "How old are you?"))
         self.title_2.setText(_translate("MainWindow", "YOU ARE"))
         self.age_label.setText(_translate("MainWindow", ""))
         self.pushButton.setText(_translate("MainWindow", "Start Camera"))
@@ -93,8 +94,12 @@ class AgeDetector(QMainWindow):
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Convert frame to grayscale for face detection
         faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)) # Detect faces
-
-        for (x, y, w, h) in faces:
+        #This line uses a Haar Cascade classifier to find faces in the grayscale image (`gray`), adjusting parameters like scale and minimum neighbors for detection accuracy.
+      
+      #extract face region from the frame to predict age
+      #In each iteration, the variables x, y, w, and h are assigned the values for a single detected face.
+      
+        for (x, y, w, h) in faces:#bounding box coordinates
             face_img = frame[y:y+h, x:x+w].copy() # Extract the detected face region
             blob = cv2.dnn.blobFromImage(face_img, 1.0, (227, 227), self.MODEL_MEAN_VALUES, swapRB=False)
             self.age_net.setInput(blob)
